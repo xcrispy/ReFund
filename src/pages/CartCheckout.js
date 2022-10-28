@@ -19,7 +19,7 @@ import { useSigner, useAccount } from "wagmi";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
 import { erc20ABI } from "wagmi";
-
+import Moralis from "moralis-v1";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 
@@ -158,6 +158,21 @@ export const CartCheckout = () => {
   }, [tokenAddress]);
 
   const [items, setItems] = useState(initialState);
+  const [dataInfo, setDataInfo] = useState();
+
+  const QueryData = async (grant_id) => {
+    const GrantTestData = Moralis.Object.extend("GrantTestData");
+    const grantTestData = new GrantTestData();
+    const grantTestDataquery = new Moralis.Query(grantTestData);
+    const dataQuery = await grantTestDataquery.find();
+
+    if (dataQuery.length < Number(grant_id)) return;
+
+    grantTestDataquery.equalTo("grantId", grant_id);
+    const idQuery = await grantTestDataquery.find();
+    console.log(idQuery[0]);
+    return idQuery[0].attributes.grantDonationAddress;
+  };
 
   const setAmount = (id) => (amount) =>
     setItems((items) =>
@@ -180,7 +195,6 @@ export const CartCheckout = () => {
     console.log(Amount);
   };
 
-  
   return (
     <div>
       <div className="grantCheckoutDiv">

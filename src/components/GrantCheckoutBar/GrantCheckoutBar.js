@@ -7,8 +7,7 @@ import { ShimmerCategoryItem } from "react-shimmer-effects";
 
 export const GrantCheckoutBar = ({ grantId, amount, setAmount, show }) => {
   const [grantDonationAmount, setGrantDonationAmount] = useState();
-  const { addToCart, cartItems, setAddressOfCartItems, addressOfCartItems } =
-    useCart();
+  const { addToCart, cartItems } = useCart();
 
   const [data, setData] = useState();
   const { isInitialized } = useMoralis();
@@ -73,10 +72,6 @@ export const GrantCheckoutBar = ({ grantId, amount, setAmount, show }) => {
     console.log(grantDonationAmount);
   };
 */
-  if (show === true) {
-    setAddressOfCartItems([...addressOfCartItems, grantDonationAmount]);
-    console.log(addressOfCartItems);
-  }
   return (
     <div>
       {data ? (
