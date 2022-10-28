@@ -1,0 +1,34 @@
+.GrantMainHeadDiv{
+    margin: 2em 7em;
+    overflow: hidden;
+    div h1{
+        font-size: 1000;
+        font-weight: 300;
+    }
+    div h3 {
+        padding: 1em 0em;;
+    }
+}
+.QuoteImage{
+ //   border: 2px solid black;
+    margin: 4em;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ButtonSplit{
+    display: flex;
+    gap: 3em;
+    align-items: center;
+}
+
+@media screen and (max-width: 1167px) {
+    .QuoteImage{
+        display: block;
+    }
+    .imgTag{
+       margin-top: 2em;
+    }  
+  }

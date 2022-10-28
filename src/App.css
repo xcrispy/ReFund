@@ -1,0 +1,28 @@
+.App {
+  text-align: center;
+}
+.toggle:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  outline-offset: none !important;
+}
+.navheading {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.rotateImg {
+  animation: rotation 6s infinite linear;
+
+  @keyframes rotation {
+    from {
+      transform: rotate(359deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+}
+.grantslink {
+  padding: 5px 7% !important;
+}

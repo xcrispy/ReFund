@@ -1,0 +1,24 @@
+.checkoutouterdiv{
+    display: flex;
+    margin: 13px;
+    align-items: center;
+    gap: 3em;
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid rgb(113,113,113);
+   // width: fit-content;
+    max-height: 120px;
+}
+.imageandname{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.amoutnandclose{
+    display: flex;
+    align-items: center;
+    gap: 2.5em;
+}
+.Name{
+    max-width: 70%;
+}

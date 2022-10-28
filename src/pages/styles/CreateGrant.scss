@@ -1,0 +1,61 @@
+.outerDiv{
+padding: 70px 100px;
+
+}
+
+.GrantDetails{
+    margin: 4em auto;
+    //border: 3px solid green;
+    height: 100%;
+    width: 80%;
+    max-width: 600px;
+}
+.GrantDetailsSpecial{
+    margin: 3em auto;
+    //border: 3px solid green;
+    height: 100%;
+    width: 80%;
+    max-width: 70%;
+    &GrantInfo{
+        border-radius: 20px;
+        border: 3px solid #D8D7E0;
+    }
+}
+.GrantDetailsHeader{
+    font-weight: 500;
+    font-size: 25px;
+    padding: 0.5em 0em;
+}
+.GrantInfo{
+    padding: 40px;
+    border-radius: 20px;
+    border: 3px solid #D8D7E0;
+}
+.removeBoxShadow{
+    outline: none !important;
+    box-shadow: none !important;
+    outline-offset: none !important;
+}
+.removeBoxShadow:focus{
+    border: 1px solid #D1D7DC !important;
+}
+.tinyTextBelowTitle{
+    font-size: 14px;
+    color: #777F87;
+    
+}
+.displayFlex{
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.bannerDiv{
+    border: 2px dotted #D1D7DC;
+   display: flex;
+   flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 201px;
+    width: 100%;
+    cursor: pointer;
+}
