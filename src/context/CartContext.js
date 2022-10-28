@@ -11,7 +11,7 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
   const initialState = Array.from(
-    { length: JSON.parse(localStorage.getItem("RefundcartItems")).length },
+    { length: JSON.parse(localStorage.getItem("RefundcartItems"))?.length },
     (_, i) => ({
       id: nanoid(),
       value: i,
@@ -20,7 +20,6 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     const cartItemsData = JSON.parse(localStorage.getItem("RefundcartItems"));
-    console.log(cartItemsData.length);
     if (cartItemsData) {
       setCartItems(cartItemsData);
     }
