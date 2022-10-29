@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { nanoid } from "nanoid";
+import Moralis from "moralis-v1";
 
 const CartContext = createContext();
 
@@ -9,6 +10,7 @@ export function useCart() {
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
+  const [donationAddress, setDonationAddress] = useState([]);
 
   const initialState = Array.from(
     { length: JSON.parse(localStorage.getItem("RefundcartItems"))?.length },
@@ -29,6 +31,7 @@ export function CartProvider({ children }) {
     let prevCart = [...cartItems];
     if (prevCart.includes(id)) {
       removeFromCart(id);
+
       // console.log("remove index");
     } else {
       //  console.log("add index");
@@ -101,6 +104,7 @@ export function CartProvider({ children }) {
         removeFromCart,
         cartItems,
         initialState,
+        donationAddress,
       }}
     >
       {children}

@@ -8,7 +8,6 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Grants } from "./pages/Grants";
 import { CreateGrant } from "./pages/CreateGrant";
 import { CartCheckout } from "./pages/CartCheckout";
-import { Home } from "./pages/Home";
 import { Account } from "./pages/Accounts";
 import { GrantView } from "./pages/GrantView";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -21,7 +20,7 @@ import Moralis from "moralis-v1";
 import GrantMain from "./pages/GrantMain";
 
 function App() {
-  const [show, setShow] = useState(false);
+  const [dataId, setDataId] = useState(false);
   const { address, isConnected } = useAccount();
   let navigate = useNavigate();
   const { cartItems } = useCart();
@@ -35,6 +34,7 @@ function App() {
       serverUrl: process.env.REACT_APP_SERVER_URL,
     });
   };
+
   return (
     <>
       <Navbar
@@ -121,8 +121,7 @@ function App() {
         </Container>
       </Navbar>
       <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/grants/explorer" element={<Grants />} />
+        <Route path="/" exact element={<GrantMain />} />
         <Route path="/grants/explorer" element={<Grants />} />
         <Route
           path="/grants/:id_grant/:grant_name_url"

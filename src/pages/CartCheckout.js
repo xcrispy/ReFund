@@ -47,7 +47,7 @@ const Child = ({ amount, setAmount }) => {
 export const CartCheckout = () => {
   const [tokenName, setTokenName] = useState("");
   const [tokenAddress, setTokenAddress] = useState("");
-  const { addToCart, cartItems, initialState } = useCart();
+  const { addToCart, cartItems, initialState, donationAddress } = useCart();
   const [expanded, setExpanded] = React.useState("");
   const [showCopy1, setShowCopy1] = React.useState(false);
   const [showCopy2, setShowCopy2] = React.useState(false);
@@ -164,13 +164,8 @@ export const CartCheckout = () => {
     const GrantTestData = Moralis.Object.extend("GrantTestData");
     const grantTestData = new GrantTestData();
     const grantTestDataquery = new Moralis.Query(grantTestData);
-    const dataQuery = await grantTestDataquery.find();
-
-    if (dataQuery.length < Number(grant_id)) return;
-
     grantTestDataquery.equalTo("grantId", grant_id);
     const idQuery = await grantTestDataquery.find();
-    console.log(idQuery[0]);
     return idQuery[0].attributes.grantDonationAddress;
   };
 
@@ -185,13 +180,33 @@ export const CartCheckout = () => {
           : item
       )
     );
-
+  /*
+  async function resolveAddress(i) {
+    await QueryData(cartItems[i]).then((data) => {
+      return data;
+    });
+  }
+*/
   const collectALlItmes = () => {
     let Amount = [];
+    let Address = [];
     for (let i = 0; i < items.length; i++) {
       const sentvalue = ethers.utils.parseUnits(items[i].value.toString(), 18);
       Amount.push(sentvalue);
     }
+    for (let i = 0; i < cartItems.length; i++) {
+      console.log(QueryData(cartItems[i]));
+      /*
+        .then((data) => {
+          console.log("loading");
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+        */
+    }
+
     console.log(Amount);
   };
 

@@ -10,6 +10,9 @@ const GrantMain = () => {
       <div className={styles.QuoteImage}>
         <div style={{ width: "100%" }}>
           <h1>Fund the open web</h1>
+          <span className={styles.refundfullttex}>
+            ReFund : regenerative funding
+          </span>
 
           <h3>
             ReFund help fund the open source projects built in the Polygon
