@@ -5,6 +5,7 @@ import { useMoralis } from "react-moralis";
 import Moralis from "moralis-v1";
 import { ShimmerCategoryItem } from "react-shimmer-effects";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const GrantCheckoutBar = ({ grantId }) => {
   const { addToCart } = useCart();
@@ -38,24 +39,35 @@ export const GrantCheckoutBar = ({ grantId }) => {
   return (
     <div>
       {data ? (
-        <div className={styles.checkoutouterdiv}>
+        <div
+          style={{ justifyContent: "space-between" }}
+          className={styles.checkoutouterdiv}
+        >
           <div className={styles.imageandname}>
             <img width={160} height={100} src={data.attributes.grantBanner} />
-            <h3 className={styles.Name}>{data.attributes.grantName}</h3>
+            <h3
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate(
+                  `/grants/${grantId}/${data.attributes.grantRouteName}`
+                );
+              }}
+              className={styles.Name}
+            >
+              {data.attributes.grantName}
+            </h3>
           </div>
           <div className={styles.amoutnandclose}>
-            <span
+            <CloseIcon
               onClick={async () => {
-                window.location.reload();
                 addToCart(grantId);
+                window.location.reload();
               }}
               style={{
                 cursor: "pointer",
                 fontSize: "30px",
               }}
-            >
-              &times;
-            </span>
+            />
           </div>
         </div>
       ) : (

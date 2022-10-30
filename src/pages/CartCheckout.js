@@ -30,10 +30,11 @@ import Tooltip from "@mui/material/Tooltip";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 const Child = ({ amount, setAmount }) => {
   return (
-    <div className="TheCheckoutInput">
+    <div style={{ paddingBottom: "2em" }} className="TheCheckoutInput">
       <InputGroup>
         <Form.Control
           value={amount}
@@ -524,12 +525,7 @@ export const CartCheckout = () => {
                   </Dropdown.Item>
                 </DropdownButton>
               </div>
-              {/*} <div className="extratext">
-                you are donating : {grantDonationAmount}&nbsp; {tokenName}
-                  </div> */}
-
               <br />
-
               <Tooltip
                 title="Approve donation amount or max"
                 placement="top-start"
@@ -637,6 +633,20 @@ export const CartCheckout = () => {
                   />{" "}
                   &nbsp;{" "}
                   {showCopy1 ? <Badge bg="secondary">copied</Badge> : null}
+                </Typography>
+                <p />
+                <Typography>
+                  <span className="grantViewAddressEdit">
+                    <MDBIcon fas icon="link" />
+
+                    <a
+                      href="https://frac-tion.vercel.app/faucet"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Get test FRACT here
+                    </a>
+                  </span>
                 </Typography>
               </AccordionDetails>
             </Accordion>

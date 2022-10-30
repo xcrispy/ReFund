@@ -376,7 +376,7 @@ export const CreateGrant = () => {
                         onSubmit={(values, { setSubmitting }) => {
                           //  console.log("what I am submitting is: ", values);
                           setTimeout(() => {
-                            alert(JSON.stringify(values, null, 2));
+                            // alert(JSON.stringify(values, null, 2));
                             setSubmitting(false);
                           }, 300);
                         }}
@@ -416,22 +416,7 @@ export const CreateGrant = () => {
                                   style={{
                                     paddingBottom: "7px",
                                   }}
-                                >
-                                  {/*}
-                                    <Button
-                                      onClick={() => {
-                                        show === true
-                                          ? setShow(true)
-                                          : setShow(false);
-                                      }}
-                                      htmlType="submit"
-                                      disabled={!isValid || isSubmitting}
-                                    >
-                                      {show === true
-                                        ? "Close Preview"
-                                        : "Open preview"}
-                                      </Button> */}
-                                </div>
+                                ></div>
                               </FormikForm>
                               <button
                                 onClick={() => {

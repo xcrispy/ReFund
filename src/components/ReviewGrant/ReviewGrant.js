@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Badge, Button } from "react-bootstrap";
 import "./ReviewGrant.scss";
 import ReportIcon from "@mui/icons-material/Report";
 import HelpIcon from "@mui/icons-material/Help";
@@ -10,6 +10,7 @@ import AboutBar from "../RichText/RichText";
 import { copyToClipboard, getEllipsisTxt } from "../../pages/Extra";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Chip } from "@mui/material";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 export const ReviewGrant = ({
   grantname,
@@ -35,44 +36,79 @@ export const ReviewGrant = ({
           ))}
           <div className="lineReview"></div>
           <div className="socialDetailsReview">
-            <div>
-              <a href={"" + grantwebsite + ""} target="_blank" rel="noreferrer">
-                {grantwebsite}
-              </a>
-              <br />
-              <a
-                href={"https://twitter.com/" + granttwitter + ""}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {granttwitter}
-              </a>
-              <br />
-              <span>Updated : {new Date().toDateString()}</span>
-            </div>
-            <div>
-              <div className="addressGrant">
-                <a
-                  href={
-                    "https://mumbai.polygonscan.com/address/" +
-                    grantaddress +
-                    ""
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {getEllipsisTxt(grantaddress, 6)}
-                </a>
-                <ContentCopyIcon
-                  onClick={() => copyToClipboard(grantaddress)}
-                  className="ContentCopyIcon"
-                />
-                Polygon
-              </div>
+            <div className="socialDetails">
+              <div>
+                <span className="grantViewAddressEdit">
+                  <MDBIcon fas icon="link" />
 
-              <a href={"" + grantgithub + ""} target="_blank" rel="noreferrer">
-                {grantgithub}
-              </a>
+                  <a
+                    href={"" + grantwebsite + ""}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {grantwebsite}
+                  </a>
+                </span>
+                <span className="grantViewAddressEdit">
+                  <MDBIcon fab icon="twitter" />
+
+                  <a
+                    href={"https://twitter.com/" + granttwitter + ""}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {granttwitter}
+                  </a>
+                </span>
+
+                <span className="grantViewAddressEdit">
+                  <MDBIcon fas icon="clock" />
+                  <span>
+                    Updated
+                    {new Date().toDateString()}
+                  </span>
+                </span>
+              </div>
+              <div>
+                <div>
+                  <span className="grantViewAddressEdit">
+                    <MDBIcon fas icon="hand-holding-usd" />
+                    <a
+                      href={
+                        "https://mumbai.polygonscan.com/address/" +
+                        grantaddress +
+                        ""
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {getEllipsisTxt(grantaddress, 5)}
+                    </a>
+
+                    <ContentCopyIcon
+                      width={1}
+                      height={1}
+                      onClick={() => copyToClipboard(grantaddress)}
+                      className="ContentCopyIcon"
+                    />
+                    <Badge pill bg="primary">
+                      polygon
+                    </Badge>
+                  </span>
+                </div>
+                <span>
+                  {" "}
+                  <MDBIcon fas icon="code-branch" />
+                  &nbsp;
+                  <a
+                    href={"" + grantgithub + ""}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {grantgithub}
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
           <div className="lineReview"></div>
