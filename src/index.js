@@ -67,7 +67,12 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider coolMode={true} modalSize="compact" chains={chains}>
+      <RainbowKitProvider
+        showRecentTransactions={true}
+        coolMode={true}
+        modalSize="compact"
+        chains={chains}
+      >
         <MoralisProvider
           serverUrl={process.env.REACT_APP_SERVER_URL}
           appId={process.env.REACT_APP_APPLICATION_ID}
@@ -75,10 +80,17 @@ root.render(
           <Router>
             <CartProvider>
               <App />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+
               <div className="footer">
                 <p>
                   &copy; {new Date().getFullYear()} Copyright:{" "}
-                  <a className="text-light" href="https://mdbootstrap.com/">
+                  <a className="text-light" href="https://regfund.vercel.app/">
                     ReFund made by crispy
                   </a>
                 </p>

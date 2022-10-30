@@ -21,45 +21,59 @@ import { useAccount } from "wagmi";
 import { MDBIcon } from "mdb-react-ui-kit";
 import { Badge } from "react-bootstrap";
 import { ShimmerPostDetails } from "react-shimmer-effects";
+import { Tooltip } from "@mui/material";
 
 export const GrantView = () => {
   const { id_grant, grant_name_url } = useParams();
   const [data, setData] = useState();
-  const { isInitialized } = useMoralis();
   const { cartItems, addToCart } = useCart();
   const { address, isConnected } = useAccount();
 
-  const testVar = {
-    owner: "0x4c6Ec2448C243B39Cd1e9E6db0F9bF7436c0c93f",
-    team_members: [
-      "0xC6197014aab6D6E05A288804E65a0B87183C48D5",
-      "0xF06cC0D929EfdF195e4D313Ccd108E40eB079491",
-    ],
-  };
-
   useEffect(() => {
-    // loadData();
-    if (isInitialized) {
-      const id = setInterval(() => QueryData(), 1500);
-      return () => clearInterval(id);
-    }
-  });
+    const loadMoralis = async () => {
+      await Moralis.start({
+        appId: process.env.REACT_APP_APPLICATION_ID,
+        serverUrl: process.env.REACT_APP_SERVER_URL,
+      });
+    };
+    loadMoralis();
+    QueryData();
+  }, []);
   const QueryData = async () => {
     const GrantTestData = Moralis.Object.extend("GrantTestData");
     const grantTestData = new GrantTestData();
     const grantTestDataquery = new Moralis.Query(grantTestData);
-    const dataQuery = await grantTestDataquery.find();
-    // console.log(dataQuery.length);
-    // console.log(Number(id_grant));
-
-    if (dataQuery.length < Number(id_grant)) return;
-
     grantTestDataquery.equalTo("grantId", id_grant);
     const idQuery = await grantTestDataquery.find();
     setData(idQuery[0]);
     // console.log(idQuery);
   };
+  const [grantOwner, setGrantowner] = useState(false);
+  const [teamMember, setTeamMember] = useState(false);
+  useEffect(() => {
+    CanEdit();
+  }, [address]);
+  const CanEdit = () => {
+    if (data) {
+      for (let i = 0; i < data.attributes.grantTeamMembers.length; i++) {
+        console.log(data.attributes.grantTeamMembers[i].team_member_address);
+        if (
+          data.attributes.grantTeamMembers[i].team_member_address === address
+        ) {
+          setTeamMember(true);
+          console.log(data.attributes.grantTeamMembers[i].team_member_address);
+          console.log("found team");
+          break;
+        }
 
+        if (address === data.attributes.grantOwnerAddress) {
+          setGrantowner(true);
+        } else {
+          setGrantowner(false);
+        }
+      }
+    }
+  };
   return (
     <>
       {data ? (
@@ -181,10 +195,7 @@ export const GrantView = () => {
               </div>
             </div>
             <div className="test  CartandTeamHeader">
-              {(isConnected && address === data.attributes.grantOwnerAddress) ||
-              data.attributes.grantTeamMembers.map((team_member) => {
-                return address === team_member.team_member_address;
-              }) ? (
+              {grantOwner || teamMember ? (
                 <div className="EditGrant">
                   <span className="progressTextEdit">
                     <DriveFileRenameOutlineIcon /> Keep your grant up to date
@@ -238,12 +249,22 @@ export const GrantView = () => {
                 ) : null}
               </div>
               <div className="displayflexalign">
-                <span style={{ cursor: "pointer" }}>
-                  <HelpIcon /> rules
-                </span>
-                <span style={{ cursor: "pointer" }}>
-                  <ReportIcon /> report
-                </span>
+                <Tooltip
+                  title="only projects on polygon blockchain are currently allowed"
+                  placement="right-end"
+                >
+                  <span style={{ cursor: "pointer" }}>
+                    <HelpIcon /> rules
+                  </span>
+                </Tooltip>
+                <Tooltip
+                  title="create an issue in the project github"
+                  placement="right-end"
+                >
+                  <span style={{ cursor: "pointer" }}>
+                    <ReportIcon /> report
+                  </span>
+                </Tooltip>
               </div>
               <h3>Team</h3>
               <div>

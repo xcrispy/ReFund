@@ -129,7 +129,7 @@ function App() {
         />
         <Route path="/grants/new" element={<CreateGrant />} />
         <Route path="/grants" element={<GrantMain />} />
-        <Route path="/:address" element={<Account />} />
+        <Route path="/:account_address" element={<Account />} />
         <Route path="/grants/cart" element={<CartCheckout />} />
       </Routes>
     </>

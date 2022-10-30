@@ -33,6 +33,7 @@
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
     "react-shimmer-effects": "^1.0.2",
+    "react-spinners": "^0.13.6",
     "sass": "^1.55.0",
     "wagmi": "^0.6.8",
     "web-vitals": "^2.1.4"

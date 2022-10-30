@@ -22,9 +22,14 @@ import { erc20ABI } from "wagmi";
 import Moralis from "moralis-v1";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-
-export const ReFundAddress = "";
-export const ReFundABI = "";
+import CheckOutModal from "../components/Modal/Modal";
+import PacmanLoader from "react-spinners/PacmanLoader";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import Tooltip from "@mui/material/Tooltip";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const Child = ({ amount, setAmount }) => {
   return (
@@ -32,8 +37,13 @@ const Child = ({ amount, setAmount }) => {
       <InputGroup>
         <Form.Control
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          style={{ width: "100%" }}
+          onChange={(e) => {
+            const re = /^\d*(\.)?(\d{0,10})?$/;
+            if (e.target.value === "" || re.test(e.target.value)) {
+              setAmount(e.target.value);
+            }
+          }}
+          style={{ width: "100%", border: "2px solid #717171" }}
           className="grantCheckOutInput"
           placeholder="Amount"
           aria-label="Username"
@@ -45,21 +55,127 @@ const Child = ({ amount, setAmount }) => {
 };
 
 export const CartCheckout = () => {
+  const ReFundAddress = "0x1101ccc32B66e0cCC2B555Aa7aAD1227Ab030722";
+  const ReFundABI = [
+    {
+      inputs: [
+        {
+          internalType: "address",
+          name: "token_address",
+          type: "address",
+        },
+        {
+          internalType: "address[]",
+          name: "donation_addresses",
+          type: "address[]",
+        },
+        {
+          internalType: "uint256[]",
+          name: "donation_amount",
+          type: "uint256[]",
+        },
+      ],
+      name: "batchDonate",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "donator",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "token_address",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address[]",
+          name: "donation_addresses",
+          type: "address[]",
+        },
+        {
+          indexed: false,
+          internalType: "uint256[]",
+          name: "donation_amount",
+          type: "uint256[]",
+        },
+      ],
+      name: "BatchDonated",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: "address",
+          name: "donator",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "token_address",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "address",
+          name: "donation_addresses",
+          type: "address",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "donation_amount",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "uint256",
+          name: "donated_token_decimal",
+          type: "uint256",
+        },
+        {
+          indexed: false,
+          internalType: "string",
+          name: "donated_token_symbol",
+          type: "string",
+        },
+      ],
+      name: "Donated",
+      type: "event",
+    },
+  ];
   const [tokenName, setTokenName] = useState("");
   const [tokenAddress, setTokenAddress] = useState("");
   const { addToCart, cartItems, initialState, donationAddress } = useCart();
   const [expanded, setExpanded] = React.useState("");
   const [showCopy1, setShowCopy1] = React.useState(false);
   const [showCopy2, setShowCopy2] = React.useState(false);
+  const [grantDonationAmount, setGrantDonationAmount] = useState();
   const [showCopy3, setShowCopy3] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const [Addresss, setAddress] = React.useState([]);
+  const [showWaiting, setShowWaiting] = useState();
 
-  const [approveState, setApproveState] = React.useState(true);
+  const [error, setError] = useState("");
+
+  const [approveState, setApproveState] = React.useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   let navigate = useNavigate();
   const { data: signer } = useSigner();
   const { address } = useAccount();
-
+  const addRecentTransaction = useAddRecentTransaction();
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
@@ -94,6 +210,61 @@ export const CartCheckout = () => {
       marginLeft: theme.spacing(1),
     },
   }));
+  const IOSSwitch = styled((props) => (
+    <Switch
+      focusVisibleClassName=".Mui-focusVisible"
+      disableRipple
+      {...props}
+    />
+  ))(({ theme }) => ({
+    width: 42,
+    height: 26,
+    padding: 0,
+    "& .MuiSwitch-switchBase": {
+      padding: 0,
+      margin: 2,
+      transitionDuration: "300ms",
+      "&.Mui-checked": {
+        transform: "translateX(16px)",
+        color: "#fff",
+        "& + .MuiSwitch-track": {
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#0C6DFD" : "#0C6DFD",
+          opacity: 1,
+          border: 0,
+        },
+        "&.Mui-disabled + .MuiSwitch-track": {
+          opacity: 0.5,
+        },
+      },
+      "&.Mui-focusVisible .MuiSwitch-thumb": {
+        color: "#33cf4d",
+        border: "6px solid #fff",
+      },
+      "&.Mui-disabled .MuiSwitch-thumb": {
+        color:
+          theme.palette.mode === "light"
+            ? theme.palette.grey[100]
+            : theme.palette.grey[600],
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxSizing: "border-box",
+      width: 22,
+      height: 22,
+    },
+    "& .MuiSwitch-track": {
+      borderRadius: 26 / 2,
+      backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+      opacity: 1,
+      transition: theme.transitions.create(["background-color"], {
+        duration: 500,
+      }),
+    },
+  }));
 
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -122,25 +293,32 @@ export const CartCheckout = () => {
       setTimeout(() => setShowCopy3(false), 3000);
     }
   };
-
-  const handleInputChange = (value) => {};
-
-  const { config, error, isError } = usePrepareContractWrite({
-    address: ReFundAddress,
-    chainId: 80001,
-    abi: ReFundABI,
-    functionName: "batchDonate",
-    args: [],
-  });
-  const { data, write } = useContractWrite(config);
-
+  function formatToCommas(x) {
+    if (x) return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
   const Approve = async () => {
     const ERC20Contract = new ethers.Contract(tokenAddress, erc20ABI, signer);
-    const tokenApprove = await ERC20Contract.approve(
-      ReFundAddress,
-      "1000000000000000000000000000000000000000"
-    );
-    console.log(tokenApprove.wait(5));
+    try {
+      const tokenApprove = await ERC20Contract.approve(
+        ReFundAddress,
+        ethers.utils.parseUnits(
+          checked
+            ? "10000000000000"
+            : (Number(grantDonationAmount) + 1).toString(),
+          18
+        )
+      );
+      const tx = await tokenApprove.wait();
+      addRecentTransaction({
+        hash: tx.transactionHash,
+        description: `Approved ${tokenName}`,
+      });
+
+      setShowWaiting(false);
+    } catch (e) {
+      setLoadingTx(false);
+      console.log(e.message);
+    }
   };
 
   const checkAllowance = async () => {
@@ -149,24 +327,102 @@ export const CartCheckout = () => {
       address,
       ReFundAddress
     );
-    setApproveState(tokenAllowance > 100000000);
-    console.log(approveState);
+    setApproveState(
+      Number(tokenAllowance.toString()) > Number(grantDonationAmount)
+    );
+  };
+
+  const batchDonate = async (_amount) => {
+    const ReFundContract = new ethers.Contract(
+      ReFundAddress,
+      ReFundABI,
+      signer
+    );
+    console.log(ReFundContract);
+    try {
+      const BatchDonate = await ReFundContract.batchDonate(
+        tokenAddress,
+        Addresss,
+        _amount
+      );
+      setShowWaiting(false);
+      setShowConfirm(true);
+      const tx = await BatchDonate.wait();
+      addRecentTransaction({
+        hash: tx.transactionHash,
+        description: `batchDonated ${formatToCommas(
+          grantDonationAmount
+        )} ${tokenName} to  ${items.length} grants`,
+      });
+
+      setTimeout(clearRefresh(), 5000);
+    } catch (e) {
+      setLoadingTx(false);
+      console.log(e.message);
+    }
+  };
+
+  const clearRefresh = () => {
+    localStorage.removeItem("RefundcartItems");
+    window.location.reload();
+    setShowConfirm(false);
   };
 
   useEffect(() => {
-    checkAllowance();
-  }, [tokenAddress]);
+    if (tokenAddress) {
+      checkAllowance();
+    }
+  });
+  useEffect(() => {
+    if (items.length > 0) {
+      test();
+    }
+  });
+
+  useEffect(() => {
+    if (items.length > 0) {
+      getTotalAmount();
+      if (tokenName) {
+        setError("");
+      }
+
+      if (checked) {
+      }
+    }
+  });
+  const getTotalAmount = () => {
+    let valueAdded = 0;
+    for (let i = 0; i < items.length; i++) {
+      valueAdded += Number(items[i].value);
+    }
+    setGrantDonationAmount(valueAdded);
+  };
+
+  useEffect(() => {
+    const loadMoralis = async () => {
+      await Moralis.start({
+        appId: process.env.REACT_APP_APPLICATION_ID,
+        serverUrl: process.env.REACT_APP_SERVER_URL,
+      });
+    };
+    loadMoralis();
+  }, []);
 
   const [items, setItems] = useState(initialState);
-  const [dataInfo, setDataInfo] = useState();
+  const [loadingTx, setLoadingTx] = useState(true);
 
-  const QueryData = async (grant_id) => {
-    const GrantTestData = Moralis.Object.extend("GrantTestData");
-    const grantTestData = new GrantTestData();
-    const grantTestDataquery = new Moralis.Query(grantTestData);
-    grantTestDataquery.equalTo("grantId", grant_id);
-    const idQuery = await grantTestDataquery.find();
-    return idQuery[0].attributes.grantDonationAddress;
+  const test = async () => {
+    let Address = [];
+    for (let i = 0; i < cartItems.length; i++) {
+      const GrantTestData = Moralis.Object.extend("GrantTestData");
+      const grantTestData = new GrantTestData();
+      const grantTestDataquery = new Moralis.Query(grantTestData);
+      grantTestDataquery.equalTo("grantId", cartItems[i]);
+      const idQuery = await grantTestDataquery.find();
+      //console.log(idQuery[0].attributes.grantDonationAddress);
+      Address.push(idQuery[0].attributes.grantDonationAddress);
+    }
+    setAddress(Address);
   };
 
   const setAmount = (id) => (amount) =>
@@ -180,34 +436,23 @@ export const CartCheckout = () => {
           : item
       )
     );
-  /*
-  async function resolveAddress(i) {
-    await QueryData(cartItems[i]).then((data) => {
-      return data;
-    });
-  }
-*/
+
   const collectALlItmes = () => {
+    setShow(true);
     let Amount = [];
-    let Address = [];
+
     for (let i = 0; i < items.length; i++) {
       const sentvalue = ethers.utils.parseUnits(items[i].value.toString(), 18);
       Amount.push(sentvalue);
     }
-    for (let i = 0; i < cartItems.length; i++) {
-      console.log(QueryData(cartItems[i]));
-      /*
-        .then((data) => {
-          console.log("loading");
-          console.log(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-        */
-    }
+    batchDonate(Amount);
+  };
 
-    console.log(Amount);
+  const [checked, setChecked] = useState(true);
+
+  const switchHandler = (event) => {
+    setChecked(event.target.checked);
+    console.log(event.target.checked);
   };
 
   return (
@@ -218,7 +463,7 @@ export const CartCheckout = () => {
             {cartItems.map((cartItem) => {
               return (
                 <div key={cartItem}>
-                  <GrantCheckoutBar grantId={cartItem} show={show} />
+                  <GrantCheckoutBar grantId={cartItem} />
                 </div>
               );
             })}
@@ -243,6 +488,7 @@ export const CartCheckout = () => {
               <div className="displayandflexlol">
                 <span>Token Selection:</span>
                 <DropdownButton
+                  onClick={test}
                   id="dropdown-basic-button"
                   title={!tokenName ? "Select Token" : tokenName}
                 >
@@ -278,34 +524,60 @@ export const CartCheckout = () => {
                   </Dropdown.Item>
                 </DropdownButton>
               </div>
-              <br />
-              <div className="extratext">
-                you are donating : 200 {tokenName}
-              </div>
+              {/*} <div className="extratext">
+                you are donating : {grantDonationAmount}&nbsp; {tokenName}
+                  </div> */}
 
               <br />
+
+              <Tooltip
+                title="Approve donation amount or max"
+                placement="top-start"
+              >
+                <FormControlLabel
+                  style={{ float: "right" }}
+                  control={
+                    <IOSSwitch
+                      sx={{ m: 1 }}
+                      checked={checked}
+                      onChange={switchHandler}
+                    />
+                  }
+                  label="Max"
+                />
+              </Tooltip>
               <div className="approveandcheckout">
-                <button
+                <Button
+                  disabled={approveState ? true : false}
+                  className="buttoncheckout"
+                  variant="primary"
                   onClick={() => {
-                    collectALlItmes();
-                    console.log(items);
+                    if (tokenName) {
+                      setShowWaiting(true);
+                      setLoadingTx(true);
+                      Approve();
+                    } else {
+                      setError("Token has not been selected");
+                    }
                   }}
                 >
-                  Value
-                </button>
-                {approveState ? (
-                  <Button variant="primary" onClick={Approve}>
-                    Approve
-                  </Button>
-                ) : null}
+                  Approve
+                </Button>
                 <Button
+                  disabled={!approveState ? true : false}
+                  className="buttoncheckout"
                   onClick={() => {
-                    setShow(true);
+                    if (tokenName) {
+                      setShow(true);
+                    } else {
+                      setError("Token has not been selected");
+                    }
                   }}
                   variant="primary"
                 >
-                  Checkout
+                  Polygon Checkout
                 </Button>
+                <span style={{ color: "red" }}>{error}</span>
               </div>
             </div>
             <Accordion
@@ -368,6 +640,130 @@ export const CartCheckout = () => {
                 </Typography>
               </AccordionDetails>
             </Accordion>
+            <CheckOutModal show={show} onHide={() => setShow(false)}>
+              <div
+                style={{
+                  padding: "2em 0.7em",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1em",
+                }}
+              >
+                <img
+                  width="70px"
+                  height="55px"
+                  src="https://gateway.pinata.cloud/ipfs/QmaW6MPtnwvBXb59j8Wyec68D38x1ZP3bajJ4fq98GR86F"
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.1em",
+                  }}
+                >
+                  <span style={{ fontSize: "17px" }}>
+                    Donating to {items.length} grants
+                  </span>
+                  <span style={{ fontSize: "15px" }}>
+                    Total: {formatToCommas(grantDonationAmount)} {tokenName}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <Button
+                  className="buttoncheckout"
+                  onClick={() => {
+                    collectALlItmes();
+                    setShowWaiting(true);
+                    setLoadingTx(true);
+                    setShow(false);
+                  }}
+                  variant="primary"
+                >
+                  Confirm Polygon Checkout
+                </Button>
+              </div>
+            </CheckOutModal>
+            <CheckOutModal
+              show={showWaiting}
+              onHide={() => setShowWaiting(false)}
+            >
+              {loadingTx ? (
+                <div
+                  style={{
+                    padding: "2em 2em",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2.5em",
+                  }}
+                >
+                  <PacmanLoader color="rgb(12,109,253)" />
+                  <div>
+                    <span style={{ fontSize: "17px" }}>
+                      Waiting for confirmation
+                    </span>
+                    <br />
+                    <br />
+                    <span style={{ fontSize: "14px", fontWeight: "700" }}>
+                      Confirm this transaction in your wallet
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "1em",
+                  }}
+                >
+                  <WarningAmberIcon sx={{ width: "70px", height: "70px" }} />
+
+                  <span>Transaction rejected</span>
+                  <Button
+                    className="buttoncheckout"
+                    onClick={() => {
+                      setShowWaiting(false);
+                    }}
+                    variant="primary"
+                  >
+                    Close
+                  </Button>
+                </div>
+              )}
+            </CheckOutModal>
+            <CheckOutModal
+              show={showConfirm}
+              onHide={() => setShowConfirm(false)}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1em",
+                }}
+              >
+                <CheckCircleOutlineIcon
+                  sx={{ width: "70px", height: "70px" }}
+                />
+
+                <span>Successfully Donated</span>
+                <span>This page will refresh in 5 secs </span>
+                <Button
+                  className="buttoncheckout"
+                  onClick={() => {
+                    setShowWaiting(false);
+                    setShowConfirm(false);
+                    window.location.reload();
+                  }}
+                  variant="primary"
+                >
+                  Confirm
+                </Button>
+              </div>
+            </CheckOutModal>
           </div>
         ) : (
           <div>

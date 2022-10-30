@@ -4,74 +4,37 @@ import { useCart } from "../../context/CartContext";
 import { useMoralis } from "react-moralis";
 import Moralis from "moralis-v1";
 import { ShimmerCategoryItem } from "react-shimmer-effects";
+import { useNavigate } from "react-router-dom";
 
-export const GrantCheckoutBar = ({ grantId, amount, setAmount, show }) => {
-  const [grantDonationAmount, setGrantDonationAmount] = useState();
-  const { addToCart, cartItems } = useCart();
-
+export const GrantCheckoutBar = ({ grantId }) => {
+  const { addToCart } = useCart();
+  let navigate = useNavigate();
   const [data, setData] = useState();
-  const { isInitialized } = useMoralis();
 
   useEffect(() => {
-    // loadData();
-    if (isInitialized) {
-      const id = setInterval(() => QueryData(), 1500);
-      return () => clearInterval(id);
-    }
-  });
+    localStorage.setItem("testValue", +1);
+    const loadMoralis = async () => {
+      await Moralis.start({
+        appId: process.env.REACT_APP_APPLICATION_ID,
+        serverUrl: process.env.REACT_APP_SERVER_URL,
+      });
+    };
+    loadMoralis();
+    QueryData();
+  }, []);
+
+  function timeout(delay) {
+    return new Promise((res) => setTimeout(res, delay));
+  }
 
   const QueryData = async () => {
     const GrantTestData = Moralis.Object.extend("GrantTestData");
     const grantTestData = new GrantTestData();
     const grantTestDataquery = new Moralis.Query(grantTestData);
-    const dataQuery = await grantTestDataquery.find();
-
-    if (dataQuery.length < Number(grantId)) return;
-
     grantTestDataquery.equalTo("grantId", grantId);
     const idQuery = await grantTestDataquery.find();
     setData(idQuery[0]);
   };
-  /*
-  constructor(props) {
-    super(props);
-    this.state = { objects: {} };
-   }
-   
-   */
-  /*const handleChange = (index, event) => {
-    setGrantDonationAmount((state) => {
-      const newObject = { ...state.amount };
-      newObject[`${index}`] = { amount: event.target.value, key: index };
-      amountbox(grantDonationAmount);
-      return { grantDonationAmount: newObject };
-    });
-    console.log(grantDonationAmount);
-  };
-
-  const updateState = (index, e) => {
-    const DonationAmount = grantDonationAmount.map((item) => {
-      if (index === grantId) {
-        return { ...item, amount: e.target.value };
-      } else {
-        return item;
-      }
-    });
-    setGrantDonationAmount(DonationAmount);
-    console.log(grantDonationAmount);
-  };
-
-  const handleUpdate = (id, e) => {
-    const { value } = e.target;
-    setGrantDonationAmount((amounts) => {
-      grantDonationAmount?.map((list, index) =>
-        index === id ? { ...list, amount: value } : list
-      );
-    });
-
-    console.log(grantDonationAmount);
-  };
-*/
   return (
     <div>
       {data ? (
@@ -82,7 +45,8 @@ export const GrantCheckoutBar = ({ grantId, amount, setAmount, show }) => {
           </div>
           <div className={styles.amoutnandclose}>
             <span
-              onClick={() => {
+              onClick={async () => {
+                window.location.reload();
                 addToCart(grantId);
               }}
               style={{

@@ -23,15 +23,15 @@
     justify-content: center;
 }
 .approveandcheckout{
-    gap: 2em;
     display: flex;
-    align-items: center;
+    gap: 0.7em;
+    width: 100%;
+    flex-direction: column;
     justify-content: center;
 }
 .extratext{
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
 }
 @media screen and (max-width: 1180px) {
@@ -50,7 +50,6 @@
 }
 .inputAndAmount{
     display: flex;
-    align-items: center;
 }
 .grantCheckOutInput{
     outline: none !important;
@@ -62,6 +61,9 @@
     border: 1px solid #D1D7DC !important;
 }
 .TheCheckoutInput{
-    margin: 4em;
-    border: 2px solid blue;
+    margin: 4em 2em;
 }
+
+.buttoncheckout{
+width: 100%;
+ }

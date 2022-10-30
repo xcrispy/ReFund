@@ -26,6 +26,9 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
+import CheckOutModal from "../components/Modal/Modal";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+
 const steps = ["Grant Details", "Owner Information", "Review Grant"];
 const options = [
   "Web3",
@@ -72,7 +75,7 @@ export const CreateGrant = () => {
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-
+  const [showSuccess, setShowSuccess] = useState(false);
   const handleNext = () => {
     if (activeStep === steps.length - 2) {
       if (
@@ -137,8 +140,9 @@ export const CreateGrant = () => {
       !grantDonationAddress ||
       !grantProjectTag ||
       !grantTwitterHandle
-    )
-      return;
+    ) {
+      console.log("some stuffs are invalid");
+    }
 
     const GrantTestData = Moralis.Object.extend("GrantTestData");
     const grantTestData = new GrantTestData();
@@ -159,11 +163,11 @@ export const CreateGrant = () => {
     grantTestData.set("grantProjectTag", grantProjectTag);
     grantTestData.set("grantTwitterHandle", grantTwitterHandle);
     grantTestData.set("grantIsActive", true);
-
+    setShowSuccess(true);
     const dataQuery = await grantTestDataquery.find();
     // console.log(dataQuery);
     ///// fix the grant_id, it is important
-    grantTestData.set("grantId", dataQuery.length + 1);
+    grantTestData.set("grantId", `${dataQuery.length + 1}`);
     console.log(dataQuery.length + 1);
 
     ///// owner info
@@ -557,16 +561,9 @@ export const CreateGrant = () => {
                       onChange={(event, newValue) => {
                         setValue(newValue);
                       }}
-                      /*
-                          inputValue={inputValue}
-                          onInputChange={(event, newInputValue) => {
-                            setInputValue(newInputValue);
-                          }}
-                          */
                       multiple={true}
                       id="tags-outlined"
                       options={options}
-                      // getOptionLabel={(option) => option.title}
                       filterSelectedOptions
                       renderInput={(params) => (
                         <TextField {...params} placeholder="Tags" />
@@ -645,7 +642,15 @@ export const CreateGrant = () => {
                             type="text"
                             placeholder={`Team member #${idx + 1} address`}
                             value={teamMember.team_member_address}
-                            onChange={(e) => handleTeamAddressChange(idx, e)}
+                            onChange={(e) => {
+                              const re = /(?:0[xX])?[0-9a-fA-F]+/;
+                              if (
+                                e.target.value === "" ||
+                                re.test(e.target.value)
+                              ) {
+                                handleTeamAddressChange(idx, e);
+                              }
+                            }}
                             className="removeBoxShadow"
                             aria-label="Username"
                             aria-describedby="basic-addon1"
@@ -724,9 +729,15 @@ export const CreateGrant = () => {
                       <Form.Control
                         spellCheck={false}
                         value={grantDonationAddress}
-                        onChange={(e) =>
-                          setGrantDonationAddress(e.target.value)
-                        }
+                        onChange={(e) => {
+                          const re = /(?:0[xX])?[0-9a-fA-F]+/;
+                          if (
+                            e.target.value === "" ||
+                            re.test(e.target.value)
+                          ) {
+                            setGrantDonationAddress(e.target.value);
+                          }
+                        }}
                         className="removeBoxShadow"
                         placeholder="0x0000..."
                         aria-label="Username"
@@ -756,11 +767,23 @@ export const CreateGrant = () => {
           ) : null}
         </React.Fragment>
       </Box>
-      <PreviewBar show={show} element={grantDescription.richtext}>
-        {/*} <div dangerouslySetInnerHTML={{ __html: grantDescription.richtext }}>
-          {}
-            </div> */}
-      </PreviewBar>
+      <PreviewBar show={show} element={grantDescription.richtext}></PreviewBar>
+      <CheckOutModal show={showSuccess} onHide={() => setShowSuccess(false)}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "1em",
+          }}
+        >
+          <CheckCircleOutlineIcon sx={{ width: "70px", height: "70px" }} />
+
+          <span>Successfully Created Grant</span>
+          <span>Redirecting to your grant page ...</span>
+          <span>please wait ...</span>
+        </div>
+      </CheckOutModal>
     </div>
   );
 };

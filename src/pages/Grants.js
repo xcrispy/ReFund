@@ -21,12 +21,15 @@ export const Grants = () => {
   }));
 
   useEffect(() => {
-    // loadData();
-    if (isInitialized) {
-      const id = setInterval(() => loadData(), 1500);
-      return () => clearInterval(id);
-    }
-  });
+    const loadMoralis = async () => {
+      await Moralis.start({
+        appId: process.env.REACT_APP_APPLICATION_ID,
+        serverUrl: process.env.REACT_APP_SERVER_URL,
+      });
+    };
+    loadMoralis();
+    loadData();
+  }, []);
   const loadData = async () => {
     const GrantTestData = Moralis.Object.extend("GrantTestData");
     const grantTestData = new GrantTestData();
