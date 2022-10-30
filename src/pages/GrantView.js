@@ -359,7 +359,7 @@ export const GrantView = () => {
               </div>
             </div>
             <div className="test  CartandTeamHeader">
-              {grantOwner ? (
+              {address === data.attributes.grantOwnerAddress ? (
                 <div className="EditGrant">
                   <span className="progressTextEdit">
                     <DriveFileRenameOutlineIcon /> Keep your grant up to date
