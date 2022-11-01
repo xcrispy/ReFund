@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "@rainbow-me/rainbowkit/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets,DisclaimerComponent } from "@rainbow-me/rainbowkit";
 import {
   injectedWallet,
   rainbowWallet,
@@ -41,7 +41,7 @@ const { chains, provider } = configureChains(
 
 const connectors = connectorsForWallets([
   {
-    groupName: "Suggested",
+    groupName: "Popular",
     wallets: [
       injectedWallet({ chains }),
       rainbowWallet({ chains }),
@@ -57,6 +57,7 @@ const connectors = connectorsForWallets([
   },
 ]);
 
+
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
@@ -68,6 +69,9 @@ root.render(
   <React.StrictMode>
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
+      appInfo={{
+        appName: 'ReFund'
+      }}
         showRecentTransactions={true}
         coolMode={true}
         modalSize="compact"
