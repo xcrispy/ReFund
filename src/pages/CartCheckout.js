@@ -356,7 +356,7 @@ export const CartCheckout = () => {
         )} ${tokenName} to  ${items.length} grants`,
       });
 
-      setTimeout(clearRefresh(), 5000);
+      setTimeout(clearRefresh(), 2500);
     } catch (e) {
       setLoadingTx(false);
       console.log(e.message);
