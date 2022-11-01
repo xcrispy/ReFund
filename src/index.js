@@ -79,6 +79,22 @@ root.render(
         >
           <Router>
             <CartProvider>
+             <div
+              style={{
+                padding: "0em 2em",
+                fontSize: "20px",
+                fontWeight: "800",
+                display: "flex",
+                width: "100%",
+                height: "fit-content",
+                backgroundColor: "#C2FA09",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              THIS IS AN ALPHA TEST CURRENTLY RUNNING ON POLYGON MUMBAI TESTNET.
+              &nbsp;MAINNET COMING SOON.
+            </div>
               <App />
               <br />
               <br />
