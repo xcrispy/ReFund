@@ -35,10 +35,10 @@ ReFund will be live on ploygon mainnet and will start move to ethereum.
 
 ## 
 
-- [Front End](https://github.com/xcrispy/ReFund)
+
 
 <details >
-<summary>Hackathon submission details</summary>
+  <summary><h3>Hackathon submission details</h3></summary>
 <br>
 
 ## Getting Started
@@ -55,7 +55,6 @@ create a .env file at the root and add the the following variables
 REACT_APP_SERVER_URL = ""
 REACT_APP_APPLICATION_ID = 
 REACT_APP_INFURA_ID = 
-
 ```
 
 I hosted my own server, you can contact me for the credentials       
@@ -65,14 +64,14 @@ then `npm start`
 ---
 
 
-## DEPLOYED CONTRACTS:
+### DEPLOYED CONTRACTS:
 
 POLYGON MUMBAI:
 
 https://mumbai.polygonscan.com/address/0x1101ccc32b66e0ccc2b555aa7aad1227ab030722      
 - [Smart Contracts](https://github.com/xcrispy/ReFund/blob/main/src/contracts/ReFund.sol)
 
-
+- [Front End](https://github.com/xcrispy/ReFund)
 </details>
 
 ![refund-pdf Page 03 Snapshot 03](https://user-images.githubusercontent.com/98023462/199255882-fc27f2d6-b8f4-4ad8-a5eb-b395edc33986.png)
