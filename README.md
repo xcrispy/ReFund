@@ -57,7 +57,7 @@ REACT_APP_APPLICATION_ID =
 REACT_APP_INFURA_ID = 
 ```
 
-I hosted my own server, you can contact me for the credentials       
+I hosted my own server, you can contact me for the credentials (create an issue)       
 
 then `npm start`
 
