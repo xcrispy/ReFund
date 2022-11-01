@@ -766,7 +766,7 @@ export const CartCheckout = () => {
                   onClick={() => {
                     setShowWaiting(false);
                     setShowConfirm(false);
-                    window.location.reload();
+                    clearRefresh();
                   }}
                   variant="primary"
                 >
