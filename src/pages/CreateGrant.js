@@ -168,7 +168,7 @@ export const CreateGrant = () => {
     // console.log(dataQuery);
     ///// fix the grant_id, it is important
     grantTestData.set("grantId", `${dataQuery.length + 1}`);
-    console.log(dataQuery.length + 1);
+   // console.log(dataQuery.length + 1);
 
     ///// owner info
     grantTestData.set("grantOwnerTwitterHandle", grantOwnerTwitterHandle);

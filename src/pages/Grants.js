@@ -36,7 +36,7 @@ export const Grants = () => {
     const grantTestDataquery = new Moralis.Query(grantTestData);
     const dataQuery = await grantTestDataquery.find();
     setMappedDB(dataQuery);
-    console.log(dataQuery);
+    //console.log(dataQuery);
   };
 
   return (
@@ -51,7 +51,7 @@ export const Grants = () => {
             {mappedDB &&
               mappedDB.map((db) => {
                 if (db.attributes.grantIsActive === false) return;
-                console.log(db.attributes);
+               // console.log(db.attributes);
                 return (
                   <Grid item xs={4} sm={4} md={4} key={db.id}>
                     <Item>

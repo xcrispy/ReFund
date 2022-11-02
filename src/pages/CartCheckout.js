@@ -339,7 +339,7 @@ export const CartCheckout = () => {
       ReFundABI,
       signer
     );
-    console.log(ReFundContract);
+   // console.log(ReFundContract);
     try {
       const BatchDonate = await ReFundContract.batchDonate(
         tokenAddress,
@@ -453,7 +453,7 @@ export const CartCheckout = () => {
 
   const switchHandler = (event) => {
     setChecked(event.target.checked);
-    console.log(event.target.checked);
+   // console.log(event.target.checked);
   };
 
   return (
@@ -760,8 +760,8 @@ export const CartCheckout = () => {
                 />
 
                 <span>Successfully Donated</span>
-                <span>This page will refresh in 5 secs </span>
-                <Button
+                <span>This page will refresh when transaction has been validated </span>
+              {/*}  <Button
                   className="buttoncheckout"
                   onClick={() => {
                     setShowWaiting(false);
@@ -770,7 +770,7 @@ export const CartCheckout = () => {
                   variant="primary"
                 >
                   Confirm
-                </Button>
+                </Button> */}
               </div>
             </CheckOutModal>
           </div>

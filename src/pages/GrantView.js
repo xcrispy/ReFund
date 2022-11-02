@@ -220,13 +220,13 @@ export const GrantView = () => {
   const CanEdit = () => {
     if (data) {
       for (let i = 0; i < data.attributes.grantTeamMembers.length; i++) {
-        console.log(data.attributes.grantTeamMembers[i].team_member_address);
+      //  console.log(data.attributes.grantTeamMembers[i].team_member_address);
         if (
           data.attributes.grantTeamMembers[i].team_member_address === address
         ) {
           setTeamMember(true);
-          console.log(data.attributes.grantTeamMembers[i].team_member_address);
-          console.log("found team");
+         // console.log(data.attributes.grantTeamMembers[i].team_member_address);
+         // console.log("found team");
           break;
         }
 
